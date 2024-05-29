@@ -180,12 +180,13 @@
     </div>
 
     <script>
-        const API_KEY =  'AIzaSyBKWZa6IBP2vmXmFDQ7xUoFt_pwI_4dglo'; 'AIzaSyAu9EBgl1r5er8tLoUT2x7U-fmMXL8UfW4'; 'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
+        const API_KEY =  'AIzaSyBKWZa6IBP2vmXmFDQ7xUoFt_pwI_4dglo'; 'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
         let nextPageToken = '';
 
         document.getElementById('search-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('query').value;
+            nextPageToken = ''; // Reiniciar el token para nuevas búsquedas
             searchYouTube(query);
         });
 
@@ -196,9 +197,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const videoList = document.getElementById('video-list');
-                    if (nextPageToken === '') {
-                        videoList.innerHTML = '';
-                    }
+                    videoList.innerHTML = ''; // Limpiar resultados anteriores
                     data.items.forEach(item => {
                         const videoItem = document.createElement('div');
                         videoItem.classList.add('video-item');
@@ -248,7 +247,7 @@
                         const suggestedVideoItem = document.createElement('div');
                         suggestedVideoItem.classList.add('video-item');
                         suggestedVideoItem.innerHTML = `
-                            <img src="${item.snippet.thumbnails.medium.url}" alt="${item.snippet.title}" loading="lazy">
+                        <img src="${item.snippet.thumbnails.medium.url}" alt="${item.snippet.title}" loading="lazy">
                             <!-- Eliminar el título del video -->
                         `;
                         suggestedVideoItem.addEventListener('click', () => {
@@ -272,3 +271,4 @@
     </script>
 </body>
 </html>
+
