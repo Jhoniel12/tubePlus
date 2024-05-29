@@ -17,15 +17,11 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .header img {
             width: 100px;
             margin-bottom: 10px;
-        }
-        h1 {
-            color: #e50914;
-            margin: 0;
         }
         #search-form {
             display: flex;
@@ -157,8 +153,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="" alt="">
-        <h1>TubePlus</h1>
+        <img src="img/logo-principal.gif" alt="TubePlus Logo" onclick="location.reload()">
     </div>
     <form id="search-form">
         <input type="text" id="query" placeholder="Buscar videos..." required>
@@ -180,7 +175,12 @@
     </div>
 
     <script>
-        const API_KEY =  'AIzaSyBKWZa6IBP2vmXmFDQ7xUoFt_pwI_4dglo'; 'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
+        const API_KEY =  
+        'AIzaSyBKWZa6IBP2vmXmFDQ7xUoFt_pwI_4dglo'; 
+        'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 
+        'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 
+        'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 
+        'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
         let nextPageToken = '';
 
         document.getElementById('search-form').addEventListener('submit', function(event) {
@@ -271,3 +271,4 @@
     </script>
 </body>
 </html>
+
