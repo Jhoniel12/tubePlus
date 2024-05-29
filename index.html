@@ -101,7 +101,6 @@
             height: 100%;
             border: none;
         }
-        /* Estilos para la sección de videos sugeridos */
         #suggested-videos {
             margin-top: 20px;
             width: 100%;
@@ -111,13 +110,11 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             grid-gap: 20px;
         }
-        /* Media query para dispositivos más pequeños */
         @media only screen and (max-width: 600px) {
             #suggested-video-list {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        /* Estilos para el indicador de carga */
         .loader {
             border: 16px solid #f3f3f3;
             border-radius: 50%;
@@ -133,18 +130,16 @@
         }
         @media only screen and (max-width: 500px) {
             .video-column {
-                flex-basis: 100%; /* En pantallas pequeñas, ocupa todo el ancho */
+                flex-basis: 100%;
             }
         }
-        /* Estilos para el reproductor en dispositivos móviles */
         @media only screen and (max-width: 600px) {
             .video-container {
-                width: 92vw; /* Ancho del 90% del viewport width */
-                height: 39vh; /* Altura del 50% del viewport height */
-                max-width: none; /* Eliminar el máximo ancho establecido */
-                max-height: none; /* Eliminar la altura máxima establecida */
+                width: 92vw;
+                height: 39vh;
+                max-width: none;
+                max-height: none;
             }
-            /* Ocultar el título del video en el reproductor original */
             .video-container h3 {
                 display: none;
             }
@@ -153,7 +148,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="img/logo-principal.gif" alt="TubePlus Logo" onclick="location.reload()">
+        <img src="logo-principal.gif" alt="TubePlus Logo" onclick="location.reload()">
     </div>
     <form id="search-form">
         <input type="text" id="query" placeholder="Buscar videos..." required>
@@ -166,22 +161,20 @@
             <iframe id="video-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>
         </div>
     </div>
-    <!-- Nueva sección para mostrar los videos sugeridos -->
     <div id="suggested-videos">
         <h2>Videos Sugeridos</h2>
         <div id="suggested-video-list"></div>
-        <!-- Indicador de carga -->
         <div id="loader" class="loader"></div>
     </div>
 
     <script>
         const API_KEY =  
-        'AIzaSyBKWZa6IBP2vmXmFDQ7xUoFt_pwI_4dglo'; 
-        'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 
-        'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 
-        'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 
-        'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
-        let nextPageToken = '';
+    'AIzaSyBKWZa6IBP2vmXmFDQ7xUoFt_pwI_4dglo'; 
+    'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 
+    'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 
+    'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 
+    'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
+    let nextPageToken = '';
 
         document.getElementById('search-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -192,12 +185,12 @@
 
         function searchYouTube(query) {
             const loader = document.getElementById('loader');
-            loader.style.display = 'block'; // Mostrar el indicador de carga
-            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=35&key=${API_KEY}&pageToken=${nextPageToken}`)
+            loader.style.display = 'block';
+            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=36&key=${API_KEY}&pageToken=${nextPageToken}`)
                 .then(response => response.json())
                 .then(data => {
                     const videoList = document.getElementById('video-list');
-                    videoList.innerHTML = ''; // Limpiar resultados anteriores
+                    videoList.innerHTML = '';
                     data.items.forEach(item => {
                         const videoItem = document.createElement('div');
                         videoItem.classList.add('video-item');
@@ -210,11 +203,11 @@
                         videoList.appendChild(videoItem);
                     });
                     nextPageToken = data.nextPageToken || '';
-                    loader.style.display = 'none'; // Ocultar el indicador de carga
+                    loader.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    loader.style.display = 'none'; // Ocultar el indicador de carga en caso de error
+                    loader.style.display = 'none';
                 });
         }
 
@@ -232,43 +225,50 @@
             player.style.display = 'none';
         }
 
-        // Función para cargar videos sugeridos
         function loadSuggestedVideos() {
             const loader = document.getElementById('loader');
-            loader.style.display = 'block'; // Mostrar el indicador de carga
-            fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=35&key=${API_KEY}`)
+            loader.style.display = 'block';
+            fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=36&key=${API_KEY}`)
                 .then(response => response.json())
                 .then(data => {
                     const suggestedVideoList = document.getElementById('suggested-video-list');
-                    suggestedVideoList.innerHTML = ''; // Limpiar la lista de videos sugeridos
-                    const shuffledVideos = data.items.sort(() => 0.5 - Math.random()); // Mezclar los videos
-                    const selectedVideos = shuffledVideos.slice(0, 35); // Seleccionar los primeros 35 videos mezclados
+                    suggestedVideoList.innerHTML = '';
+                    const shuffledVideos = data.items.sort(() => 0.5 - Math.random());
+                    const selectedVideos = shuffledVideos.slice(0, 36);
                     selectedVideos.forEach(item => {
                         const suggestedVideoItem = document.createElement('div');
                         suggestedVideoItem.classList.add('video-item');
                         suggestedVideoItem.innerHTML = `
                         <img src="${item.snippet.thumbnails.medium.url}" alt="${item.snippet.title}" loading="lazy">
-                            <!-- Eliminar el título del video -->
                         `;
                         suggestedVideoItem.addEventListener('click', () => {
                             loadVideo(item.id);
                         });
                         suggestedVideoList.appendChild(suggestedVideoItem);
                     });
-                    loader.style.display = 'none'; // Ocultar el indicador de carga
+                    loader.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    loader.style.display = 'none'; // Ocultar el indicador de carga en caso de error
+                    loader.style.display = 'none';
                 });
         }
 
-        // Llamar a la función de carga de videos sugeridos al cargar la página
         window.onload = loadSuggestedVideos;
 
-        // Actualizar videos sugeridos cada 3 horas
-        setInterval(loadSuggestedVideos, 10800000); // 3 horas en milisegundos
+        setInterval(loadSuggestedVideos, 10800000);
+
+        // Función para detectar la apertura del panel de desarrollador y redirigir a google.com
+        (function() {
+            const threshold = 160;
+            const detectDevTools = function() {
+                if (window.outerHeight - window.innerHeight > threshold ||
+                    window.outerWidth - window.innerWidth > threshold) {
+                    window.location.href = 'https://www.google.com';
+                }
+            };
+            setInterval(detectDevTools, 1000);
+        })();
     </script>
 </body>
 </html>
-
