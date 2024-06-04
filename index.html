@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -181,7 +180,7 @@
             width: 90px;
             height: 90px;
             animation: spin 2s linear infinite;
-            margin: 20px auto;
+            margin: 150px auto;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -226,7 +225,7 @@
         <button class="close-comments" onclick="closeComments()">Cerrar </button>
     </div>
     <div id="suggested-videos">
-        <h2>Videos Sugeridos</h2>
+        <h2>Populares</h2>
         <div id="suggested-video-list"></div>
         <div id="loader" class="loader"></div>
     </div>
@@ -238,19 +237,18 @@
      'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 
      'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 
      'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
-     let nextPageToken = '';
+      // Recuerda reemplazar 'Tu_API_KEY' con tu propia clave de API
 
         document.getElementById('search-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const query = document.getElementById('query').value;
-            nextPageToken = ''; // Reiniciar el token para nuevas búsquedas
             searchYouTube(query);
         });
 
         function searchYouTube(query) {
             const loader = document.getElementById('loader');
             loader.style.display = 'block';
-            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=36&key=${API_KEY}&pageToken=${nextPageToken}`)
+            fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=36&key=${API_KEY}`)
                 .then(response => response.json())
                 .then(data => {
                     const videoList = document.getElementById('video-list');
@@ -266,7 +264,6 @@
                         });
                         videoList.appendChild(videoItem);
                     });
-                    nextPageToken = data.nextPageToken || '';
                     loader.style.display = 'none';
                 })
                 .catch(error => {
