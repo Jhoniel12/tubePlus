@@ -61,6 +61,14 @@
             border-radius: 4px;
             loading: lazy;
         }
+        .video-title, .video-channel {
+            font-size: 14px;
+            margin: 5px 0;
+            text-align: center;
+        }
+        .video-title {
+            font-weight: bold;
+        }
         #player {
             display: none;
             position: fixed;
@@ -232,12 +240,15 @@
 
     <script>
         const API_KEY =  
-     
      'AIzaSyCSz_OayZ15wafV2CsOtwVzLPp5q5UMT6Q'; 
      'AIzaSyD_v2cJ3kMuxYijxDUnNgKe24Ns0g61Kxc'; 
      'AIzaSyAvX-tPSuqBElA4IepnOqXLJ2_EOHN7lJU'; 
      'AIzaSyB-sk4eICqV5tBJIaubuVIvoQMkvc3nPik';
-      // Recuerda reemplazar 'Tu_API_KEY' con tu propia clave de API
+     
+     
+        const GEO_API_KEY = 
+        '74ca0e5fe51738'; 
+        '552daf4bd50c37';
 
         document.getElementById('search-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -258,6 +269,8 @@
                         videoItem.classList.add('video-item');
                         videoItem.innerHTML = `
                             <img src="${item.snippet.thumbnails.medium.url}" alt="${item.snippet.title}">
+                            <div class="video-title">${item.snippet.title}</div>
+                            <div class="video-channel">${item.snippet.channelTitle}</div>
                         `;
                         videoItem.addEventListener('click', () => {
                             loadVideo(item.id.videoId);
@@ -285,12 +298,12 @@
             const iframe = document.getElementById('video-iframe');
             iframe.src = '';
             player.style.display = 'none';
-            closeComments(); // Cerrar comentarios al cerrar el reproductor
+            closeComments();
         }
 
         function loadComments(videoId) {
             const commentsContainer = document.getElementById('comments-container');
-            commentsContainer.innerHTML = ''; // Limpiar comentarios anteriores
+            commentsContainer.innerHTML = '';
             fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${API_KEY}`)
                 .then(response => response.json())
                 .then(data => {
@@ -316,7 +329,7 @@
 
             commentsContainer.style.display = 'block';
             commentButton.style.display = 'none';
-            commentModal.style.display = 'flex'; // Mostrar la ventana emergente de comentarios
+            commentModal.style.display = 'flex';
         }
 
         function closeComments() {
@@ -326,53 +339,52 @@
 
             commentsContainer.style.display = 'none';
             commentButton.style.display = 'block';
-            commentModal.style.display = 'none'; // Ocultar la ventana emergente de comentarios
+            commentModal.style.display = 'none';
         }
 
         function loadSuggestedVideos() {
             const loader = document.getElementById('loader');
             loader.style.display = 'block';
-            fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&maxResults=36&key=${API_KEY}`)
+
+            fetch(`https://ipinfo.io/json?token=${GEO_API_KEY}`)
                 .then(response => response.json())
                 .then(data => {
-                    const suggestedVideoList = document.getElementById('suggested-video-list');
-                    suggestedVideoList.innerHTML = '';
-                    const shuffledVideos = data.items.sort(() => 0.5 - Math.random());
-                    const selectedVideos = shuffledVideos.slice(0, 36);
-                    selectedVideos.forEach(item => {
-                        const suggestedVideoItem = document.createElement('div');
-                        suggestedVideoItem.classList.add('video-item');
-                        suggestedVideoItem.innerHTML = `
-                        <img src="${item.snippet.thumbnails.medium.url}" alt="${item.snippet.title}" loading="lazy">
-                        `;
-                        suggestedVideoItem.addEventListener('click', () => {
-                            loadVideo(item.id);
+                    const country = data.country;
+                    fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&regionCode=${country}&maxResults=36&key=${API_KEY}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const suggestedVideoList = document.getElementById('suggested-video-list');
+                            suggestedVideoList.innerHTML = '';
+                            const shuffledVideos = data.items.sort(() => 0.5 - Math.random());
+                            const selectedVideos = shuffledVideos.slice(0, 36);
+                            selectedVideos.forEach(item => {
+                                const suggestedVideoItem = document.createElement('div');
+                                suggestedVideoItem.classList.add('video-item');
+                                suggestedVideoItem.innerHTML = `
+                                    <img src="${item.snippet.thumbnails.medium.url}" alt="${item.snippet.title}" loading="lazy">
+                                    <div class="video-title">${item.snippet.title}</div>
+                                    <div class="video-channel">${item.snippet.channelTitle}</div>
+                                `;
+                                suggestedVideoItem.addEventListener('click', () => {
+                                    loadVideo(item.id);
+                                });
+                                suggestedVideoList.appendChild(suggestedVideoItem);
+                            });
+                            loader.style.display = 'none';
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            loader.style.display = 'none';
                         });
-                        suggestedVideoList.appendChild(suggestedVideoItem);
-                    });
-                    loader.style.display = 'none';
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Error al obtener la ubicación:', error);
                     loader.style.display = 'none';
                 });
         }
 
         window.onload = loadSuggestedVideos;
-
         setInterval(loadSuggestedVideos, 10800000);
-
-         // Función para detectar la apertura del panel de desarrollador y redirigir a google.com
-         (function() {
-            const threshold = 160;
-            const detectDevTools = function() {
-                if (window.outerHeight - window.innerHeight > threshold ||
-                    window.outerWidth - window.innerWidth > threshold) {
-                    window.location.href = 'https://www.google.com';
-                }
-            };
-            setInterval(detectDevTools, 1000);
-        })();
     </script>
 </body>
 </html>
